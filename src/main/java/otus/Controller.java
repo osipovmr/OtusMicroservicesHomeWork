@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
+    @GetMapping("/")
+    public ResponseEntity<String> checkStatus() {
+        return ResponseEntity.ok("Hello, user! It is working!");
+    }
+
     @GetMapping("/health")
     public ResponseEntity<Void> helloOtus() {
         return new ResponseEntity<>(HttpStatus.OK);
