@@ -1,0 +1,30 @@
+Назвать образ
+docker tag otus:latest osipovmr/otus_homework:otus
+
+Запушить
+docker push osipovmr/otus_homework:otus
+
+Собрать
+docker build --platform linux/amd64 -t osipovmr/otus_homework:otus .
+
+curl "http://localhost:8000/"
+
+docker run -it --rm -p 8000:8000 --name otus osipovmr/otus_homework:otus
+
+kubectl create namespace osipov
+kubectl config set-context --current --namespace=osipov
+kubectl apply -f pod.yml
+kubectl apply -f dp.yml
+kubectl get pods --show-labels
+kubectl port-forward app-kuber 8000:8000
+kubectl delete pod app-kuber
+kubectl describe pod app-kuber
+kubectl get pod -A
+kubectl get pod --watch
+kubectl get rs
+kubectl label pod app-kuber "env=prod" --overwrite
+
+192.168.49.2
+sudo nano /private/etc/hosts
+
+helm install nginx ingress-nginx/ingress-nginx --namespace osipov -f nginx-ingr

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: kuber-rs-1
+  labels:
+    app: kuber-rs
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+        - name: kuber-app
+          image: osipovmr/otus_homework:otus
+          ports:
+            - containerPort: 8000
