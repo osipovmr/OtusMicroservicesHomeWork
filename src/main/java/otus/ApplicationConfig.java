@@ -1,4 +1,4 @@
-package config;
+package otus;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

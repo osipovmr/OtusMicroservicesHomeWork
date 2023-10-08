@@ -1,6 +1,6 @@
 package otus.model.entity;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -9,8 +9,11 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
+@Table(name = "user_table")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String username;
     private String firstName;

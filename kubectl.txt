@@ -1,11 +1,11 @@
 Назвать образ
-docker tag otus:latest osipovmr/otus_homework:otus
+docker tag otus:latest osipovmr/otus_homework:2
 
 Запушить
-docker push osipovmr/otus_homework:otus
+docker push osipovmr/otus_homework:2
 
 Собрать
-docker build --platform linux/amd64 -t osipovmr/otus_homework:otus .
+docker build --platform linux/amd64 -t osipovmr/otus_homework:2 .
 
 curl "http://localhost:8000/"
 
@@ -28,3 +28,19 @@ kubectl label pod app-kuber "env=prod" --overwrite
 sudo nano /private/etc/hosts
 
 helm install nginx ingress-nginx/ingress-nginx --namespace osipov -f nginx-ingr
+
+admin YWRtaW4=
+password cGFzc3dvcmQ=
+
+create table user_table (
+id int,
+user_name text,
+    first_name text,
+    last_name text,
+    email text,
+    phone text) ;
+insert into user_table (user_name, first_name, last_name, email, phone)
+values
+('osipovmr', 'ILYA', 'OSIPOV', 'osipovmr@yandex.ru', '+79112477069');
+
+docker run --name osipov_db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db -d postgres:11.21-bullseye

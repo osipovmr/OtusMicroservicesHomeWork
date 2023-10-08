@@ -1,4 +1,4 @@
-package service;
+package otus.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class UserService {
     private final UserRepository repository;
     private final ModelMapper mapper;
 
-    public UserInfoDto getUserById(int id) {
+    public UserInfoDto getUserById(Integer id) {
         User user = findUserById(id);
         return mapper.map(user, UserInfoDto.class);
     }
@@ -39,7 +39,7 @@ public class UserService {
         repository.save(user);
     }
 
-    private User findUserById(int id) {
+    private User findUserById(Integer id) {
         return repository.findById(id).orElseThrow(() ->
                 new UserNotFoundException(String.format("Usr with id %s does not exist", id)));
     }
