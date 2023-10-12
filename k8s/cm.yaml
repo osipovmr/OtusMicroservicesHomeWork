@@ -8,12 +8,8 @@ data:
       port: 8000
     spring:
       datasource: 
-        url: jdbc:postgresql://localhost:5432/db
+        url: jdbc:postgresql://postgresql:5432/otus
         username: ${DB_USER}
         password: ${DB_PASSWORD}
-      liquibase:
-        enabled: false
-        change-log: classpath:db/changelog-master.yml
       jpa:
         hibernate.dll-auto: none
-        show-sql: true

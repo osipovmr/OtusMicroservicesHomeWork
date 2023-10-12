@@ -7,6 +7,17 @@ metadata:
 spec:
   containers:
     - name: app-kuber-container
-      image: osipovmr/otus_homework:otus
+      image: osipovmr/otus_homework:helm
       ports:
         - containerPort: 8000
+      env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: kuber-secret
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kuber-secret
+              key: db-password
