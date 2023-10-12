@@ -2,7 +2,7 @@
 docker tag otus:latest osipovmr/otus_homework:2
 
 Запушить
-docker push osipovmr/otus_homework:helm
+docker push osipovmr/otus_homework:v1
 
 Собрать
 docker build --platform linux/amd64 -t osipovmr/otus_homework:helm .

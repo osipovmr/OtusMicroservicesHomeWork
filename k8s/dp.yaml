@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: app-container
-          image: osipovmr/otus_homework:helm
+          image: osipovmr/otus_homework:v1
           ports:
             - containerPort: 8000
           env:
