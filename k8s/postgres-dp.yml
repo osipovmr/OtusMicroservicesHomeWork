@@ -32,14 +32,14 @@ spec:
             - containerPort: 5432
               name: postgresql
           volumeMounts:
-            - name: postgresql-claim
+            - name: postgresql-pv
               mountPath: /var/lib/postgresql/data
             - mountPath: /docker-entrypoint-initdb.d
               name: postgresql-initdb
       volumes:
-        - name: postgresql-claim
+        - name: postgresql-pv
           persistentVolumeClaim:
-            claimName: postgresql-claim
+            claimName: postgresql-pvc
         - name: postgresql-initdb
           configMap:
             name: postgresql-initdb-config
