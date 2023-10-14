@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "db.fullname" . }}
+  labels:
+    {{- include "db.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "db.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "db.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{.Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.POSTGRES_DB }}
+            - name: POSTGRES_USER
+              value: {{ .Values.POSTGRES_USER }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.POSTGRES_PASSWORD }}
+          ports:
+            - containerPort: {{.Values.service.port }}
+              name: postgresql
+          volumeMounts:
+            - name: postgresql-pv
+              mountPath: /var/lib/postgresql/data
+            - mountPath: /docker-entrypoint-initdb.d
+              name: postgresql-initdb
+      volumes:
+        - name: postgresql-pv
+          persistentVolumeClaim:
+            claimName: postgresql-pvc
+        - name: postgresql-initdb
+          configMap:
+            name: postgresql-initdb-config
+

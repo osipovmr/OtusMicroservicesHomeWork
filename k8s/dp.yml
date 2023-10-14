@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuber-dp
+  labels:
+    name: kuber-dp
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      env: prod
+  template:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+        - name: app-container
+          image: osipovmr/otus_homework:v1
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: kuber-secret
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kuber-secret
+                  key: db-password
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: kuber-cm

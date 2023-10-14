@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kuber-cm
+data:
+  application.yml: |
+    server:
+      port: 8000
+    spring:
+      datasource: 
+        url: jdbc:postgresql://db:5432/otus
+        username: ${DB_USER}
+        password: ${DB_PASSWORD}
+      jpa:
+        hibernate.dll-auto: none

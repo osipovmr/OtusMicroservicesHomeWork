@@ -1,0 +1,59 @@
+Назвать образ
+docker tag otus:latest osipovmr/otus_homework:2
+
+Запушить
+docker push osipovmr/otus_homework:v1
+
+Собрать
+docker build --platform linux/amd64 -t osipovmr/otus_homework:helm .
+docker image build --platform linux/amd64 -t osipovmr/otus_homework:helm .
+
+curl "http://localhost:8000/"
+
+docker run -it --rm -p 8000:8000 --name otus osipovmr/otus_homework:otus
+
+kubectl create namespace osipov
+kubectl config set-context --current --namespace=osipov
+kubectl exec -it app-kuber -- ls -la
+
+kubectl get pods --show-labels
+kubectl port-forward app-kuber 8000:8000
+kubectl delete pod app-kuber
+kubectl describe pod app-kuber
+kubectl get pod -A
+kubectl get pod --watch
+kubectl get rs
+kubectl label pod app-kuber "env=prod" --overwrite
+
+kubectl exec -it -- /bin/bash/
+psql -U admin \otus
+\d user_table
+
+192.168.49.2
+sudo nano /private/etc/hosts
+
+helm install nginx ingress-nginx/ingress-nginx --namespace osipov -f nginx-ingr
+
+admin YWRtaW4=
+password cGFzc3dvcmQ=
+
+kubectl logs kuber-dp-c5ddd5c97-ckf9s
+helm install test postgresql --dry-run
+
+          env:
+            - name: POSTGRES_DB
+              value: { { .Values.POSTGRES_DB } }
+            - name: POSTGRES_USER
+              value: { { .Values.POSTGRES_USER } }
+            - name: POSTGRES_PASSWORD
+              value: p{{ .Values.POSTGRES_PASSWORD }}
+POSTGRES_DB: otus
+POSTGRES_USER: admin
+POSTGRES_PASSWORD: password
+
+kubectl apply -f pv.yml -f pvc.yml -f cm-sql.yml -f postgres-dp.yml -f postgres-svc.yml
+kubectl apply -f secret.yml -f cm.yml -f dp.yml -f svc.yml -f ingres.yml
+helm install v1 postgresql --dry-run
+helm install v1 postgresql --namespace osipov
+
+docker run --name osipov_db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db -d postgres:11.21-bullseye
