@@ -38,8 +38,22 @@ admin YWRtaW4=
 password cGFzc3dvcmQ=
 
 kubectl logs kuber-dp-c5ddd5c97-ckf9s
+helm install test postgresql --dry-run
 
-kubectl apply -f pv.yml -f pvc.yml -f initSql.yml -f postgres-dp.yml -f postgres-svc.yml
+          env:
+            - name: POSTGRES_DB
+              value: { { .Values.POSTGRES_DB } }
+            - name: POSTGRES_USER
+              value: { { .Values.POSTGRES_USER } }
+            - name: POSTGRES_PASSWORD
+              value: p{{ .Values.POSTGRES_PASSWORD }}
+POSTGRES_DB: otus
+POSTGRES_USER: admin
+POSTGRES_PASSWORD: password
+
+kubectl apply -f pv.yml -f pvc.yml -f cm-sql.yml -f postgres-dp.yml -f postgres-svc.yml
 kubectl apply -f secret.yml -f cm.yml -f dp.yml -f svc.yml -f ingres.yml
+helm install v1 postgresql --dry-run
+helm install v1 postgresql --namespace osipov
 
 docker run --name osipov_db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db -d postgres:11.21-bullseye
