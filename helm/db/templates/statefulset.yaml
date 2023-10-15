@@ -1,16 +1,15 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "db.fullname" . }}
   labels:
     {{- include "db.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "db.selectorLabels" . | nindent 6 }}
+  minReadySeconds: 10
   template:
     metadata:
       labels:
@@ -22,11 +21,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POSTGRES_DB
-              value: {{ .Values.POSTGRES_DB }}
+              value: {{.Values.POSTGRES_DB }}
             - name: POSTGRES_USER
-              value: {{ .Values.POSTGRES_USER }}
+              value: {{.Values.POSTGRES_USER }}
             - name: POSTGRES_PASSWORD
-              value: {{ .Values.POSTGRES_PASSWORD }}
+              value: {{.Values.POSTGRES_PASSWORD }}
           ports:
             - containerPort: {{.Values.service.port }}
               name: postgresql
@@ -42,4 +41,3 @@ spec:
         - name: postgresql-initdb
           configMap:
             name: postgresql-initdb-config
-
