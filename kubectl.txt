@@ -53,7 +53,7 @@ POSTGRES_PASSWORD: password
 
 kubectl apply -f pv.yml -f pvc.yml -f cm-sql.yml -f postgres-dp.yml -f postgres-svc.yml
 kubectl apply -f secret.yml -f cm.yml -f dp.yml -f svc.yml -f ingres.yml
-helm install v1 postgresql --dry-run
-helm install v1 postgresql --namespace osipov
+helm install v1 db --dry-run
+helm install v1 db --namespace osipov
 
 docker run --name osipov_db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -e POSTGRES_DB=db -d postgres:11.21-bullseye
