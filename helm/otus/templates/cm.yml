@@ -13,3 +13,19 @@ data:
         password: ${DB_PASSWORD}
       jpa:
         hibernate.dll-auto: none
+    management:
+      endpoint:
+        health:
+          show-details: always
+      metrics:
+        distribution:
+          slo:
+            http.server.requests: 10ms, 50ms, 100ms, 200ms, 300ms, 400ms, 500ms
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+      prometheus:
+        metrics:
+          export:
+            enabled: true

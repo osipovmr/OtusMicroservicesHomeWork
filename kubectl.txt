@@ -2,11 +2,11 @@
 docker tag otus:latest osipovmr/otus_homework:2
 
 Запушить
-docker push osipovmr/otus_homework:v1
+docker push osipovmr/otus_homework:grafana
 
 Собрать
-docker build --platform linux/amd64 -t osipovmr/otus_homework:helm .
-docker image build --platform linux/amd64 -t osipovmr/otus_homework:helm .
+docker build --platform linux/amd64 -t osipovmr/otus_homework:grafana .
+docker image build --platform linux/amd64 -t osipovmr/otus_homework:grafana .
 
 docker run --name db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -e POSTGRES_DB=otus postgres:16
 
@@ -17,6 +17,7 @@ docker run -it --rm -p 8000:8000 --name otus osipovmr/otus_homework:otus
 kubectl create namespace osipov
 kubectl config set-context --current --namespace=osipov
 kubectl exec -it app-kuber -- ls -la
+
 
 kubectl get pods --show-labels
 kubectl port-forward app-kuber 8000:8000
