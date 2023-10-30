@@ -11,8 +11,10 @@ data:
         url: jdbc:postgresql://v1-db:5432/otus
         username: ${DB_USER}
         password: ${DB_PASSWORD}
-      jpa:
-        hibernate.dll-auto: none
+        jpa:
+          show-sql: false
+          hibernate:
+            ddl-auto: none
     management:
       endpoint:
         health:
