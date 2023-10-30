@@ -1,0 +1,13 @@
+kubectl port-forward service/prometheus-operated  9090
+kubectl port-forward service/stack-grafana  9000:80
+
+
+
+
+admin / prom-operator
+
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --set controller.metrics.enabled=true \
+  --set controller.metrics.serviceMonitor.enabled=true \
+  --set controller.metrics.serviceMonitor.additionalLabels.release="stack"

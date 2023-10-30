@@ -2,6 +2,7 @@ package otus.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,16 +11,23 @@ import otus.model.dto.UserInfoDto;
 import otus.model.dto.UserUpdateDto;
 import otus.service.UserService;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping(value = "/user")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserInfoDto> getUserById(@PathVariable("id") int userId) {
-        return ResponseEntity.ok(userService.getUserById(userId));
+        log.info("Get request for user {}.", userId);
+        if ((LocalDateTime.now().getMinute()%2) == 0) {
+            return ResponseEntity.ok(userService.getUserById(userId));
+        }
+       else return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/add")

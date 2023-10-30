@@ -6,9 +6,9 @@ replicaCount: 1
 
 image:
   repository: postgres
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "11.21-bullseye"
+  tag: "16"
 
 imagePullSecrets: []
 nameOverride: ""

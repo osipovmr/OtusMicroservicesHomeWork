@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "otus.fullname" . }}
+  labels:
+    {{- include "otus.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - port: {{ .Values.service.name }}
+      scrapeTimeout: 30s
+      path: /actuator/prometheus
+      honorLabels: true
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - osipov
+  selector:
+    matchLabels:
+      {{- include "otus.selectorLabels" . | nindent 4 }}
