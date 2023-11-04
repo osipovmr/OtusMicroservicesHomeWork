@@ -12,7 +12,7 @@ public class Controller {
 
     @GetMapping("/")
     public ResponseEntity<String> checkStatus() {
-        return ResponseEntity.ok("Hello, user! It is working!");
+        return ResponseEntity.ok("Hello from App MS.");
     }
 
     @GetMapping("/health")

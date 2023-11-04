@@ -1,9 +1,6 @@
 kubectl port-forward service/prometheus-operated  9090
 kubectl port-forward service/stack-grafana  9000:80
 
-
-
-
 admin / prom-operator
 
 helm upgrade --install ingress-nginx ingress-nginx \
