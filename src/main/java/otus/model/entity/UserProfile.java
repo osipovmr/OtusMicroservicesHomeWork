@@ -9,15 +9,12 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_table")
-public class User {
+@Table(name = "user_profile")
+public class UserProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
+    private String avatarUri;
+    private Integer age;
 }
