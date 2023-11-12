@@ -11,6 +11,6 @@ public class UserProfileDto {
     private String firstName;
     private String lastName;
     private String email;
-    private String avatar_uri;
+    private String avatarUri;
     private int age;
 }

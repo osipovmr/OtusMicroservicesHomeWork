@@ -3,10 +3,13 @@ package otus.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import otus.exception.EntityNotFoundException;
 import otus.model.dto.UpdateDto;
+import otus.model.dto.UserProfileDto;
 import otus.model.entity.UserProfile;
 import otus.repository.UserProfileRepository;
+
+import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -18,11 +21,12 @@ public class UserProfileService {
 
     public UserProfile updateUser(int id, UpdateDto dto) {
         UserProfile profile;
-        try {
-            profile = findUserProfileById(id);
+        Optional<UserProfile> optionalProfile = findUserProfileById(id);
+        if (optionalProfile.isPresent()) {
+            profile = optionalProfile.get();
             profile.setAvatarUri(dto.getAvatarUri());
             profile.setAge(dto.getAge());
-        } catch (EntityNotFoundException e) {
+        } else {
             profile = UserProfile.builder()
                     .id(id)
                     .avatarUri(dto.getAvatarUri())
@@ -33,8 +37,27 @@ public class UserProfileService {
         return repository.save(profile);
     }
 
-    public UserProfile findUserProfileById(Integer id) {
-        return repository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException(String.format("UserProfile with id %s does not exist.", id)));
+    private Optional<UserProfile> findUserProfileById(Integer id) {
+        return repository.findById(id);
+    }
+
+    public UserProfileDto getUserInfo(Map<String, String> headers) {
+        UserProfileDto dto = getProfileByHeaders(headers);
+        Optional<UserProfile> optionalProfile = findUserProfileById(Integer.valueOf(headers.get("x-userid")));
+        if (optionalProfile.isPresent()) {
+            dto.setAvatarUri(optionalProfile.get().getAvatarUri());
+            dto.setAge(optionalProfile.get().getAge());
+        }
+        return dto;
+    }
+
+    private UserProfileDto getProfileByHeaders(Map<String, String> headers) {
+        return UserProfileDto.builder()
+                .id(Integer.valueOf(headers.get("x-userid")))
+                .login(headers.get("x-user"))
+                .email(headers.get("x-email"))
+                .firstName(headers.get("x-first-name"))
+                .lastName(headers.get("x-last-name"))
+                .build();
     }
 }

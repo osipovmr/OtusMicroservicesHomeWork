@@ -1,4 +1,4 @@
-docker image build --platform linux/amd64 -t osipovmr/otus_homework:grafana .
-docker push osipovmr/otus_homework:grafana
+docker image build --platform linux/amd64 -t osipovmr/otus_homework:app .
+docker push osipovmr/otus_homework:app
 
 docker run --name db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -e POSTGRES_DB=otus postgres:16

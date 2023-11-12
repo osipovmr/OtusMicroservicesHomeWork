@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "db.fullname" . }}
+  name: {{ include "app-db.fullname" . }}
   labels:
-    {{- include "db.labels" . | nindent 4 }}
+    {{- include "app-db.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "db.selectorLabels" . | nindent 6 }}
+      {{- include "app-db.selectorLabels" . | nindent 6 }}
   minReadySeconds: 10
   template:
     metadata:
       labels:
-        {{- include "db.selectorLabels" . | nindent 8 }}
+        {{- include "app-db.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{.Chart.Name }}
@@ -36,14 +36,14 @@ spec:
             - containerPort: {{.Values.service.port }}
               name: postgresql
           volumeMounts:
-            - name: postgresql-pv
+            - name: app-postgresql-pv
               mountPath: /var/lib/postgresql/data
             - mountPath: /docker-entrypoint-initdb.d
               name: postgresql-initdb
       volumes:
-        - name: postgresql-pv
+        - name: app-postgresql-pv
           persistentVolumeClaim:
-            claimName: postgresql-pvc
+            claimName: app-postgresql-pvc
         - name: postgresql-initdb
           configMap:
             name: postgresql-initdb-config
