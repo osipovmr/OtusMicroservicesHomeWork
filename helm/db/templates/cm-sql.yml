@@ -6,14 +6,15 @@ data:
   init.sql: |
     create table if not exists user_table (
     id serial primary key,
-    username varchar(256),
+    login varchar(256),
+    password varchar(256),
     first_name varchar(256),
     last_name varchar(256),
     email varchar(256),
     phone varchar(256)
     );
-    insert into user_table (username, first_name, last_name, email, phone)
+    insert into user_table (login, password, first_name, last_name, email, phone)
     values
-    ('osipovmr', 'ILYA', 'OSIPOV', 'osipovmr@yandex.ru', '+79112477069'),
-    ('otus', 'John', 'Spilberg', 'otus@gmail.com', '8(812)6009812'),
-    ('travel', 'Turkish', 'Airlines', 'fly@plane.sky', '00000');
+    ('osipovmr', '12345', 'ILYA', 'OSIPOV', 'osipovmr@yandex.ru', '+79112477069'),
+    ('otus', '12345', 'John', 'Spilberg', 'otus@gmail.com', '8(812)6009812'),
+    ('travel', '12345', 'Turkish', 'Airlines', 'fly@plane.sky', '00000');

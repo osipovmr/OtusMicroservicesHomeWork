@@ -8,7 +8,7 @@ data:
       port: 8000
     spring:
       datasource:
-        url: jdbc:postgresql://v3-app-db:5432/otus
+        url: jdbc:postgresql://v1-db:5432/otus
         username: ${DB_USER}
         password: ${DB_PASSWORD}
         jpa:

@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "otus.fullname" . }}
+  name: {{ include "auth.fullname" . }}
   labels:
-    {{- include "otus.labels" . | nindent 4 }}
+    {{- include "auth.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "otus.selectorLabels" . | nindent 6 }}
+      {{- include "auth.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,7 +16,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "otus.selectorLabels" . | nindent 8 }}
+        {{- include "auth.labels" . | nindent 8 }}
+ {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -30,12 +33,12 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: auth-secret
                   key: db-user
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: app-secret
+                  name: auth-secret
                   key: db-password
           volumeMounts:
             - name: config

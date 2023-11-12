@@ -14,3 +14,18 @@ helm install v2 otus --namespace osipov
 minikube addons enable ingress-dns
 
 kubectl delete -A ValidatingWebhookConfiguration nginx-ingress-nginx-controller-admission
+
+----------------
+helm install v1 db -n auth
+helm install v2 auth -n auth
+helm install v3 app-db -n app
+helm install v4 otus -n app
+newman run "postman.json"
+
+helm delete v2 -n auth
+helm delete v4 -n app
+helm delete v3 -n app
+
+
+http://<service>.<namespace>.svc.cluster.local:<port>/
+http://v2-auth.auth.svc.cluster.local:8000/auth
