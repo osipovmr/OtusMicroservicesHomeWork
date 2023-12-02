@@ -10,3 +10,12 @@ data:
         avatar_uri varchar NULL,
         age        int2 NULL
     );
+    CREATE TABLE public.orders
+    (
+        id      uuid NOT NULL,
+        city    varchar(255) NULL,
+        name    varchar(255) NULL,
+        value   varchar(255) NULL,
+        user_id int8 NOT NULL,
+        CONSTRAINT orders_pkey PRIMARY KEY (id)
+    );

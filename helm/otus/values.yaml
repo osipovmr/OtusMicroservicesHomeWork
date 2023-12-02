@@ -40,4 +40,6 @@ ingress:
       paths:
         - path: /users/me
           pathType: Prefix
+        - path: /order/add
+          pathType: Prefix
 
