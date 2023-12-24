@@ -180,7 +180,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"avatarUri\": \"{{avatarUri}}\", \"age\": \"{{age}}\"}",
+					"raw": "{\n    \"avatarUri\": \"{{avatarUri}}\",\n    \"age\": {{age}}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -214,7 +214,7 @@
 							"    pm.expect(jsonData.lastName).to.eql(pm.collectionVariables.get(\"lastName\"))",
 							"    pm.expect(jsonData.firstName).to.eql(pm.collectionVariables.get(\"firstName\"))",
 							"    pm.expect(jsonData.avatarUri).to.eql(pm.collectionVariables.get(\"avatarUri\"))",
-							"    pm.expect(jsonData.age).to.eql(pm.collectionVariables.get(\"age\"))",
+							"    pm.expect(jsonData.age).to.eql(parseInt(pm.collectionVariables.get(\"age\")))",
 							"});",
 							""
 						],
@@ -240,12 +240,40 @@
 		},
 		{
 			"name": "добавить заказ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"x-orderid\", pm.variables.replaceIn('{{$guid}}'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test response\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "x-orderid",
+						"value": "{{x-orderid}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"f2082f7f-b351-40bc-82a8-68229858fc04\",\n    \"name\": \"book\",\n    \"value\": 10,\n    \"city\": \"Moskow\"\n\n}",
+					"raw": "{\n    \"name\": \"book\",\n    \"value\": 10,\n    \"city\": \"Moskow\"\n\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -267,9 +295,28 @@
 		},
 		{
 			"name": "повторный заказ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test response\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "x-orderid",
+						"value": "{{x-orderid}}",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\n    \"id\": \"f2082f7f-b351-40bc-82a8-68229858fc04\",\n    \"name\": \"book\",\n    \"value\": 10,\n    \"city\": \"Moskow\"\n\n}",
@@ -560,6 +607,10 @@
 			"key": "baseUrl",
 			"value": "http://arch.homework",
 			"type": "string"
+		},
+		{
+			"key": "x-orderid",
+			"value": ""
 		}
 	]
 }
