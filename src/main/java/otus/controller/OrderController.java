@@ -9,6 +9,7 @@ import otus.model.dto.OrderRequest;
 import otus.service.OrderService;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/order")
@@ -24,6 +25,6 @@ public class OrderController {
             return new ResponseEntity<>("AUTHORIZATION IS REQUIRED", HttpStatus.UNAUTHORIZED);
         }
         int userId = Integer.parseInt(headers.get("x-userid"));
-        return new ResponseEntity<>(service.createOrder(userId, order), HttpStatus.OK);
+        return new ResponseEntity<>(service.createOrder(userId, UUID.fromString(headers.get("x-orderid")), order), HttpStatus.OK);
     }
 }

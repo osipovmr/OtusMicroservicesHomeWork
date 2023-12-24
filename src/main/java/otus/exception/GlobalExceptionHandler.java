@@ -20,4 +20,14 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ApiErrorResponse> handleOrderAlreadyExistsException(OrderAlreadyExistsException exception) {
+        log.error(exception.getLocalizedMessage());
+        ApiErrorResponse response = new ApiErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                exception.getLocalizedMessage()
+        );
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
 }

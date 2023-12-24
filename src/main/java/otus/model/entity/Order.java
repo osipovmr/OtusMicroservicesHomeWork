@@ -21,5 +21,5 @@ public class Order {
     private String name;
     private String value;
     private String city;
-    private int userId;
+    private Integer userId;
 }
