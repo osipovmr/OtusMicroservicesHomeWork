@@ -14,7 +14,7 @@ helm install v2 otus --namespace osipov
 minikube addons enable ingress-dns
 
 kubectl delete -A ValidatingWebhookConfiguration nginx-ingress-nginx-controller-admission
-
+kubectl create namespace database
 ----------------
 helm install v1 db -n auth
 helm install v2 auth -n auth
@@ -31,3 +31,30 @@ helm delete v3 -n app
 
 http://<service>.<namespace>.svc.cluster.local:<port>/
 http://v2-auth.auth.svc.cluster.local:8000/auth
+
+ПРОЕКТНАЯ РАБОТА
+kubectl create namespace auth
+kubectl create namespace app
+helm install v1 db -n auth
+helm install v2 auth -n auth
+helm install v4 otus -n app
+
+helm delete v1 -n auth
+helm delete v2 -n auth
+helm delete v4 -n app
+
+
+newman run "postman.json"
+newman run "order_test.json"
+
+helm delete otus -n project
+
+kubectl delete namespace app
+kubectl delete namespace project
+
+kubectl exec -it database-db-0 -n project -- bash
+psql -U admin \otus
+\d
+
+curl "http://127.0.0.1/actuator/prometheus"
+curl "arch.homework/actuator/prometheus"

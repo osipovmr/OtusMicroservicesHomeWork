@@ -31,7 +31,7 @@ ingress:
   enabled: true
   className: "nginx"
   annotations: {
-    nginx.ingress.kubernetes.io/auth-url: "http://v2-auth.auth.svc.cluster.local:8000/auth",
+    nginx.ingress.kubernetes.io/auth-url: "http://v2-auth.project.svc.cluster.local:8000/auth",
     nginx.ingress.kubernetes.io/auth-signin: "http://$host/signin",
     nginx.ingress.kubernetes.io/auth-response-headers: "X-User,X-Email,X-UserId,X-First-Name,X-Last-Name"
   }
