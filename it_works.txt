@@ -1,4 +1,9 @@
 minikube start --driver=hyperkit
+
+minikube start --driver=hyperkit --memory=max --cpus=max
+
+kubectl create namespace monitoring
+kubectl create namespace nginx
 kubectl create namespace project
 cd helm
 helm install v1 db -n project

@@ -13,7 +13,7 @@ helm install v2 otus --namespace osipov
 
 minikube addons enable ingress-dns
 
-kubectl delete -A ValidatingWebhookConfiguration nginx-ingress-nginx-controller-admission
+kubectl delete -A ValidatingWebhookConfiguration nginx-ingress-nginx-admission
 kubectl create namespace database
 ----------------
 helm install v1 db -n auth
@@ -52,9 +52,9 @@ helm delete otus -n project
 kubectl delete namespace app
 kubectl delete namespace project
 
-kubectl exec -it database-db-0 -n project -- bash
+kubectl exec -it v1-db-0 -n project -- bash
 psql -U admin \otus
 \d
+select * from user_table;
 
-curl "http://127.0.0.1/actuator/prometheus"
-curl "arch.homework/actuator/prometheus"
+kubectl exec -it v2-auth-5df566b6c8-f6nbv -n project -- bash

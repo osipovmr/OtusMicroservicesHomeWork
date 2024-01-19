@@ -1,0 +1,22 @@
+minikube start --driver=hyperkit
+
+minikube start --driver=hyperkit --memory=max --cpus=max
+
+kubectl create namespace monitoring
+kubectl create namespace nginx
+kubectl create namespace project
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx/
+helm repo update
+
+minikube addons enable ingress-dns
+
+helm install stack prometheus-community/kube-prometheus-stack -n monitoring -f prometheus.yml
+helm install nginx ingress-nginx/ingress-nginx --namespace nginx -f nginx-ingress.yml
+
+kubectl delete -A ValidatingWebhookConfiguration nginx-ingress-nginx-admission
+
+helm install kafka -n project oci://registry-1.docker.io/bitnamicharts/kafka
+
+УСТАНОВИТЬ АДРЕС МИНИКУБА В HOSTS

@@ -8,7 +8,7 @@ image:
   repository: osipovmr/otus_homework
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "app"
+  tag: "kafka"
 
 imagePullSecrets: [ ]
 nameOverride: ""
@@ -41,5 +41,7 @@ ingress:
         - path: /users/me
           pathType: Prefix
         - path: /order/add
+          pathType: Prefix
+        - path: /kafka
           pathType: Prefix
 

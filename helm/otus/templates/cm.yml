@@ -3,7 +3,21 @@ kind: ConfigMap
 metadata:
   name: kuber-cm
 data:
+  kafka_properties.yml: |
+    producer:
+      propertiesMap:
+        bootstrap.servers: kafka-controller-0.kafka-controller-headless.project.svc.cluster.local:9092
+        client.id: OtusProducer
+        group.id: OtusGroup
+    consumer:
+      propertiesMap:
+        bootstrap.servers: kafka-controller-0.kafka-controller-headless.project.svc.cluster.local:9092
+        client.id: OtusConsumer
+        group.id: OtusGroup
+
   application.yml: |
+    properties:
+      classpath: file:/config/
     server:
       port: 8000
     spring:
