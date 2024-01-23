@@ -58,7 +58,17 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic topic1() {
-        return TopicBuilder.name("otus").build();
+        return TopicBuilder.name("newOrder").build();
+    }
+
+    @Bean
+    public NewTopic topic2() {
+        return TopicBuilder.name("executeOrder").build();
+    }
+
+    @Bean
+    public NewTopic topic3() {
+        return TopicBuilder.name("cancelOrder").build();
     }
 
     @Bean

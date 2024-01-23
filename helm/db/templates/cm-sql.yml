@@ -4,54 +4,30 @@ metadata:
   name: postgresql-initdb-config
 data:
   init.sql: |
-    create table if not exists user_table
+    CREATE TABLE user_table
     (
-        id
-        serial
-        primary
-        key,
-        login
-        varchar
-    (
-        256
-    ),
-        password varchar
-    (
-        256
-    ),
-        first_name varchar
-    (
-        256
-    ),
-        last_name varchar
-    (
-        256
-    ),
-        email varchar
-    (
-        256
-    ),
-        phone varchar
-    (
-        256
-    )
-        );
-    insert into user_table (login, password, first_name, last_name, email, phone)
-    values ('osipovmr', '12345', 'ILYA', 'OSIPOV', 'osipovmr@yandex.ru', '+79112477069'),
-           ('otus', '12345', 'John', 'Spilberg', 'otus@gmail.com', '8(812)6009812'),
-           ('travel', '12345', 'Turkish', 'Airlines', 'fly@plane.sky', '00000');
+        user_uuid  uuid primary key not null,
+        login      varchar(256),
+        password   varchar(256),
+        first_name varchar(256),
+        last_name  varchar(256),
+        email      varchar(256),
+        phone      varchar(256)
+    );
     CREATE TABLE user_profile
     (
-        id         int8 NOT NULL,
+        user_uuid  uuid NOT NULL,
         avatar_uri varchar NULL,
         age        int2 NULL
     );
     CREATE TABLE orders
     (
-        id      uuid NOT NULL,
-        city    varchar(255) NULL,
-        name    varchar(255) NULL,
-        value   varchar(255) NULL,
-        user_id int8 NOT NULL,
-        CONSTRAINT orders_pkey PRIMARY KEY (id)
+        order_uuid   uuid primary key NOT NULL,
+        product_uuid uuid             NOT NULL,
+        quantity     int              NOT NULL,
+        cost         int              NOT NULL,
+        user_uuid    uuid             NOT NULL,
+        user_email   varchar(255) NULL,
+        success      int NULL,
+        status       varchar(255)
     );

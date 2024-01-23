@@ -39,7 +39,7 @@ helm install v1 db -n auth
 helm install v2 auth -n auth
 helm install v4 otus -n app
 
-helm delete v1 -n auth
+helm delete v1 -n project
 helm delete v2 -n auth
 helm delete v4 -n app
 
@@ -58,3 +58,5 @@ psql -U admin \otus
 select * from user_table;
 
 kubectl exec -it v2-auth-5df566b6c8-f6nbv -n project -- bash
+
+minikube service v1-db -n project --url
