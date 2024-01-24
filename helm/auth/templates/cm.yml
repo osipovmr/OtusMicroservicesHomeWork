@@ -4,6 +4,12 @@ metadata:
   name: auth-cm
 data:
   application.yml: |
+    logging:
+      level:
+        root: INFO
+        org.springframework: INFO
+        org.apache: OFF
+        kafka: OFF
     server:
       port: 8000
     spring:

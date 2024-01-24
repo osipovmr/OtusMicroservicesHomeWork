@@ -16,6 +16,12 @@ data:
         group.id: storage
 
   application.yml: |
+    logging:
+      level:
+        root: INFO
+        org.springframework: INFO
+        org.apache: OFF
+        kafka: OFF
     properties:
       classpath: file:/config/
     server:
