@@ -52,3 +52,9 @@ data:
     values ('23a214f1-8d88-4997-821e-a0781d003e16', true, false);
     insert into delivery (courier_uuid, is_available, in_delivering)
     values ('99a214f1-8d88-4997-821e-a0781d003e16', true, false);
+    create table payment
+    (
+        user_uuid       uuid not null,
+        available_money int null,
+        reserved_money  int null
+    );
