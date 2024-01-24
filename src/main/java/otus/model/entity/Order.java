@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -29,6 +30,7 @@ public class Order {
     private String userEmail;
     private int success;
     private String status;
+    private LocalDate deliveryDate;
 
     @Override
     public String toString() {

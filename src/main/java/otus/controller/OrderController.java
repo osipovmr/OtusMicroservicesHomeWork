@@ -50,6 +50,7 @@ public class OrderController {
                     .quantity(request.getQuantity())
                     .userUUID(UUID.fromString(headers.get("x-userid")))
                     .userEmail(headers.get("x-email"))
+                    .deliveryDate(request.getDeliveryDate())
                     .success(0)
                     .status("В обработке.")
                     .build();

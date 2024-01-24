@@ -10,6 +10,7 @@ helm install v1 db -n project
 helm install v2 auth -n project
 helm install v3 otus -n project
 helm install v4 storage -n project
+helm install v5 delivery -n project
 
 cd ..
 newman run "order_test.json"
@@ -18,6 +19,8 @@ helm delete v1 -n project
 helm delete v2 -n project
 helm delete v3 -n project
 helm delete v4 -n project
+helm delete v5 -n project
+
 kubectl delete namespace project
 kubectl delete pvc --all
 

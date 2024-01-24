@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: storage-cm
+  name: delivery-cm
 data:
   kafka_properties.yml: |
     producer:
       propertiesMap:
         bootstrap.servers: kafka-controller-0.kafka-controller-headless.project.svc.cluster.local:9092
-        client.id: storage-1
-        group.id: storage
+        client.id: delivery-1
+        group.id: delivery
     consumer:
       propertiesMap:
         bootstrap.servers: kafka-controller-0.kafka-controller-headless.project.svc.cluster.local:9092
-        client.id: storage-1
-        group.id: storage
+        client.id: delivery-1
+        group.id: delivery
 
   application.yml: |
     properties:

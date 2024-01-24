@@ -4,7 +4,7 @@ metadata:
   name: postgresql-initdb-config
 data:
   init.sql: |
-    CREATE TABLE user_table
+    create table user_table
     (
         user_uuid  uuid primary key not null,
         login      varchar(256),
@@ -14,28 +14,41 @@ data:
         email      varchar(256),
         phone      varchar(256)
     );
-    CREATE TABLE user_profile
+    create table user_profile
     (
-        user_uuid  uuid NOT NULL,
-        avatar_uri varchar NULL,
-        age        int2 NULL
+        user_uuid  uuid not null,
+        avatar_uri varchar null,
+        age        int2 null
     );
-    CREATE TABLE orders
+    create table storage
     (
-        order_uuid   uuid primary key NOT NULL,
-        product_uuid uuid             NOT NULL,
-        quantity     int              NOT NULL,
-        cost         int              NOT NULL,
-        user_uuid    uuid             NOT NULL,
-        user_email   varchar(255) NULL,
-        success      int NULL,
-        status       varchar(255)
-    );
-    CREATE TABLE storage
-    (
-        product_uuid       uuid NOT NULL,
+        product_uuid       uuid not null,
         available_quantity int,
         reserved_quantity  int
     );
-    INSERT INTO storage (product_uuid, available_quantity, reserved_quantity)
-    VALUES ('22a214f1-8d88-4997-821e-a0781d003e16', 200, 0);
+    create table delivery
+    (
+        courier_uuid  uuid not null,
+        is_available  bool,
+        order_uuid    uuid,
+        delivery_date timestamp,
+        in_delivering boolean
+    );
+    create table orders
+    (
+        order_uuid    uuid primary key,
+        product_uuid  uuid not null,
+        quantity      int  not null,
+        cost          int  not null,
+        user_uuid     uuid not null,
+        user_email    varchar(255) null,
+        success       int null,
+        status        varchar(255),
+        delivery_date timestamp null
+    );
+    insert into storage (product_uuid, available_quantity, reserved_quantity)
+    values ('22a214f1-8d88-4997-821e-a0781d003e16', 200, 0);
+    insert into delivery (courier_uuid, is_available, in_delivering)
+    values ('23a214f1-8d88-4997-821e-a0781d003e16', true, false);
+    insert into delivery (courier_uuid, is_available, in_delivering)
+    values ('99a214f1-8d88-4997-821e-a0781d003e16', true, false);
