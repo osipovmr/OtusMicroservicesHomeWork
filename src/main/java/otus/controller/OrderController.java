@@ -63,7 +63,8 @@ public class OrderController {
     }
 
     @KafkaListener(topics = "order200")
-    public void listen200(String message) throws JsonProcessingException {
+    public void listen200(String message) throws JsonProcessingException, InterruptedException {
+        Thread.sleep(500);
         log.info("Получено сообщение из топика 'order200' {}.", message);
         UUID orderUUID = UUID.fromString(message);
         Order order = repository.findById(orderUUID).orElseThrow();
@@ -77,7 +78,8 @@ public class OrderController {
     }
 
     @KafkaListener(topics = "order500")
-    public void listen500(String message) throws JsonProcessingException {
+    public void listen500(String message) throws JsonProcessingException, InterruptedException {
+        Thread.sleep(200);
         log.info("Получено сообщение из топика 'order500' {}.", message);
         UUID orderUUID = UUID.fromString(message);
         Order order = repository.findById(orderUUID).orElseThrow();
