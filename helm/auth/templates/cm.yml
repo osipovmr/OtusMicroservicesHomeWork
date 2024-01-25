@@ -3,7 +3,15 @@ kind: ConfigMap
 metadata:
   name: auth-cm
 data:
+  kafka_properties.yml: |
+    producer:
+      propertiesMap:
+        bootstrap.servers: kafka-controller-0.kafka-controller-headless.project.svc.cluster.local:9092
+        client.id: auth-1
+        group.id: auth
   application.yml: |
+    properties:
+      classpath: file:/config/
     logging:
       level:
         root: INFO

@@ -68,14 +68,12 @@ public class OrderController {
         UUID orderUUID = UUID.fromString(message);
         Order order = repository.findById(orderUUID).orElseThrow();
         order.setSuccess(order.getSuccess() + 1);
+        repository.save(order);
         if (order.getSuccess() == 3) {
             order.setStatus("Заказ одобрен.");
             repository.save(order);
             kafkaTemplate.send("executeOrder", objectMapper.writeValueAsString(order));
-        } else {
-            repository.save(order);
         }
-        kafkaTemplate.send("otus", message);
     }
 
     @KafkaListener(topics = "order500")
@@ -85,6 +83,7 @@ public class OrderController {
         Order order = repository.findById(orderUUID).orElseThrow();
         order.setStatus("Невозможно выполнить заказ.");
         repository.save(order);
-        kafkaTemplate.send("cancelOrder", objectMapper.writeValueAsString(order));
+        kafkaTemplate.send("cancel", objectMapper.writeValueAsString(order));
+        log.info("Отправлена команда на отмену резервирования для заказа {}.", message);
     }
 }

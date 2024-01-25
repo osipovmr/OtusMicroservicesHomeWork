@@ -68,7 +68,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic topic3() {
-        return TopicBuilder.name("cancelOrder").build();
+        return TopicBuilder.name("cancel").build();
     }
 
     @Bean

@@ -21,6 +21,7 @@ helm delete v2 -n project
 helm delete v3 -n project
 helm delete v4 -n project
 helm delete v5 -n project
+helm delete v6 -n project
 
 kubectl delete namespace project
 kubectl delete pvc --all
