@@ -1,0 +1,5 @@
+helm install kafka -n project oci://registry-1.docker.io/bitnamicharts/kafka --set listeners.client.protocol=PLAINTEXT,controller.replicaCount=1
+helm delete kafka -n project
+
+docker image build --platform linux/amd64 -t osipovmr/otus_homework:kafka .
+docker push osipovmr/otus_homework:kafka

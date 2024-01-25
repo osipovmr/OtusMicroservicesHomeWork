@@ -11,6 +11,7 @@ import otus.model.entity.UserProfile;
 import otus.service.UserProfileService;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -35,8 +36,8 @@ public class UserController {
         if (!headers.containsKey("x-userid")) {
             return new ResponseEntity<>("AUTHORIZATION IS REQUIRED", HttpStatus.UNAUTHORIZED);
         }
-        int id = Integer.parseInt(headers.get("x-userid"));
-        UserProfile profile = service.updateUser(id, dto);
+        UUID uuid = UUID.fromString(headers.get("x-userid"));
+        UserProfile profile = service.updateUser(uuid, dto);
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 }

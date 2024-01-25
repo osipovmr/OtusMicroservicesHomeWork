@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "auth.fullname" . }}
+  name: {{ include "storage.fullname" . }}
   labels:
-    {{- include "auth.labels" . | nindent 4 }}
+    {{- include "storage.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "auth.selectorLabels" . | nindent 6 }}
+      {{- include "storage.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,10 +16,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "auth.labels" . | nindent 8 }}
- {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "storage.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -27,18 +24,18 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8000
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: auth-secret
+                  name: storage-secret
                   key: db-user
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: auth-secret
+                  name: storage-secret
                   key: db-password
           volumeMounts:
             - name: config
@@ -47,4 +44,4 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: auth-cm
+            name: storage-cm

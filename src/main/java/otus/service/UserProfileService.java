@@ -10,6 +10,7 @@ import otus.repository.UserProfileRepository;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +19,16 @@ public class UserProfileService {
 
     private final UserProfileRepository repository;
 
-    public UserProfile updateUser(int id, UpdateDto dto) {
+    public UserProfile updateUser(UUID uuid, UpdateDto dto) {
         UserProfile profile;
-        Optional<UserProfile> optionalProfile = findUserProfileById(id);
+        Optional<UserProfile> optionalProfile = findUserProfileById(uuid);
         if (optionalProfile.isPresent()) {
             profile = optionalProfile.get();
             profile.setAvatarUri(dto.getAvatarUri());
             profile.setAge(dto.getAge());
         } else {
             profile = UserProfile.builder()
-                    .id(id)
+                    .userUUID(uuid)
                     .avatarUri(dto.getAvatarUri())
                     .age(dto.getAge())
                     .build();
@@ -36,13 +37,13 @@ public class UserProfileService {
         return repository.save(profile);
     }
 
-    private Optional<UserProfile> findUserProfileById(Integer id) {
-        return repository.findById(id);
+    private Optional<UserProfile> findUserProfileById(UUID uuid) {
+        return repository.findById(uuid);
     }
 
     public UserProfileDto getUserInfo(Map<String, String> headers) {
         UserProfileDto dto = getProfileByHeaders(headers);
-        Optional<UserProfile> optionalProfile = findUserProfileById(Integer.valueOf(headers.get("x-userid")));
+        Optional<UserProfile> optionalProfile = findUserProfileById(UUID.fromString(headers.get("x-userid")));
         if (optionalProfile.isPresent()) {
             dto.setAvatarUri(optionalProfile.get().getAvatarUri());
             dto.setAge(optionalProfile.get().getAge());
@@ -52,7 +53,7 @@ public class UserProfileService {
 
     private UserProfileDto getProfileByHeaders(Map<String, String> headers) {
         return UserProfileDto.builder()
-                .id(Integer.valueOf(headers.get("x-userid")))
+                .userUUID(UUID.fromString(headers.get("x-userid")))
                 .login(headers.get("x-user"))
                 .email(headers.get("x-email"))
                 .firstName(headers.get("x-first-name"))

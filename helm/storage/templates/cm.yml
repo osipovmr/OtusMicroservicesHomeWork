@@ -1,23 +1,29 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: auth-cm
+  name: storage-cm
 data:
   kafka_properties.yml: |
     producer:
       propertiesMap:
         bootstrap.servers: kafka-controller-0.kafka-controller-headless.project.svc.cluster.local:9092
-        client.id: auth-1
-        group.id: auth
+        client.id: storage-1
+        group.id: storage
+    consumer:
+      propertiesMap:
+        bootstrap.servers: kafka-controller-0.kafka-controller-headless.project.svc.cluster.local:9092
+        client.id: storage-1
+        group.id: storage
+
   application.yml: |
-    properties:
-      classpath: file:/config/
     logging:
       level:
         root: INFO
         org.springframework: INFO
         org.apache: OFF
         kafka: OFF
+    properties:
+      classpath: file:/config/
     server:
       port: 8000
     spring:

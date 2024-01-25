@@ -1,4 +1,4 @@
-# Default values for otus.
+# Default values for delivery.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -8,24 +8,16 @@ image:
   repository: osipovmr/otus_homework
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "saga"
+  tag: "delivery"
 
 imagePullSecrets: [ ]
 nameOverride: ""
 fullnameOverride: ""
 
-podAnnotations: { }
-
-podSecurityContext: { }
-# fsGroup: 2000
-
-
-
 service:
   type: NodePort
   port: 8000
   targetPort: 8000
-  name: super
 
 ingress:
   enabled: true
@@ -38,10 +30,5 @@ ingress:
   hosts:
     - host: arch.homework
       paths:
-        - path: /users/me
+        - path: /delivery/available
           pathType: Prefix
-        - path: /order/add
-          pathType: Prefix
-        - path: /order/status
-          pathType: Prefix
-

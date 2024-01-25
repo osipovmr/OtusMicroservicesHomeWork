@@ -1,7 +1,8 @@
 kubectl create namespace osipov
 kubectl config set-context --current --namespace=osipov
 
-kubectl exec -it -- /bin/bash/
+kubectl config set-context --current --namespace=database
+kubectl exec -it database-db-0 -n database -- bash
 psql -U admin \otus
 \d user_table
 

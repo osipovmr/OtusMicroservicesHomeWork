@@ -4,17 +4,57 @@ metadata:
   name: postgresql-initdb-config
 data:
   init.sql: |
-    create table if not exists user_table (
-    id serial primary key,
-    login varchar(256),
-    password varchar(256),
-    first_name varchar(256),
-    last_name varchar(256),
-    email varchar(256),
-    phone varchar(256)
+    create table user_table
+    (
+        user_uuid  uuid primary key not null,
+        login      varchar(256),
+        password   varchar(256),
+        first_name varchar(256),
+        last_name  varchar(256),
+        email      varchar(256),
+        phone      varchar(256)
     );
-    insert into user_table (login, password, first_name, last_name, email, phone)
-    values
-    ('osipovmr', '12345', 'ILYA', 'OSIPOV', 'osipovmr@yandex.ru', '+79112477069'),
-    ('otus', '12345', 'John', 'Spilberg', 'otus@gmail.com', '8(812)6009812'),
-    ('travel', '12345', 'Turkish', 'Airlines', 'fly@plane.sky', '00000');
+    create table user_profile
+    (
+        user_uuid  uuid not null,
+        avatar_uri varchar null,
+        age        int2 null
+    );
+    create table storage
+    (
+        product_uuid       uuid not null,
+        available_quantity int,
+        reserved_quantity  int
+    );
+    create table delivery
+    (
+        courier_uuid  uuid not null,
+        is_available  bool,
+        order_uuid    uuid,
+        delivery_date timestamp,
+        in_delivering boolean
+    );
+    create table orders
+    (
+        order_uuid    uuid primary key,
+        product_uuid  uuid not null,
+        quantity      int  not null,
+        cost          int  not null,
+        user_uuid     uuid not null,
+        user_email    varchar(255) null,
+        success       int null,
+        status        varchar(255),
+        delivery_date timestamp null
+    );
+    insert into storage (product_uuid, available_quantity, reserved_quantity)
+    values ('22a214f1-8d88-4997-821e-a0781d003e16', 200, 0);
+    insert into delivery (courier_uuid, is_available, in_delivering)
+    values ('23a214f1-8d88-4997-821e-a0781d003e16', true, false);
+    insert into delivery (courier_uuid, is_available, in_delivering)
+    values ('99a214f1-8d88-4997-821e-a0781d003e16', true, false);
+    create table payment
+    (
+        user_uuid       uuid not null,
+        available_money int null,
+        reserved_money  int null
+    );
