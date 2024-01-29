@@ -10,9 +10,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import otus.model.dto.OrderRequest;
+import otus.model.dto.ProcessOrderDto;
 import otus.model.entity.Order;
 import otus.repository.OrderRepository;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +28,18 @@ public class OrderController {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final OrderRepository repository;
     private final ObjectMapper objectMapper;
+
+    private final HashMap<UUID, Integer> map = new HashMap<>();
+
+    private static String getErrorMessage(ProcessOrderDto dto) {
+        return switch (dto.getServiceName()) {
+            case "delivery" -> "Невозможно выполнить заказ, так как отсутствуют свободные курьеры для доставки.";
+            case "storage" ->
+                    "Невозможно выполнить заказ, так как отсутствуют необходимое количетсво товара на складе.";
+            case "payment" -> "Невозможно выполнить заказ, так как недостаточно средств для оплаты.";
+            default -> null;
+        };
+    }
 
     @GetMapping("/status")
     public ResponseEntity<String> checkOrderStatus(@RequestParam UUID orderUUID) {
@@ -51,41 +65,57 @@ public class OrderController {
                     .userUUID(UUID.fromString(headers.get("x-userid")))
                     .userEmail(headers.get("x-email"))
                     .deliveryDate(request.getDeliveryDate())
-                    .success(0)
                     .status("В обработке.")
                     .build();
             repository.save(newOrder);
+            ProcessOrderDto dto = ProcessOrderDto.builder()
+                    .orderUUID(newOrder.getOrderUUID())
+                    .productUUID(newOrder.getProductUUID())
+                    .cost(newOrder.getCost())
+                    .quantity(newOrder.getQuantity())
+                    .userEmail(newOrder.getUserEmail())
+                    .userUUID(newOrder.getUserUUID())
+                    .deliveryDate(newOrder.getDeliveryDate())
+                    .isNew(true)
+                    .build();
             log.info("New request has been created");
-            kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(newOrder));
-            log.info("Отправлено сообщение в Кафку о создании нового заказа.");
+            kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(dto));
+            log.info("Отправлено сообщение в Кафку о создании нового заказа {}.", dto.getOrderUUID());
+            map.put(orderUUID, 0);
             return new ResponseEntity<>(newOrder.toString(), HttpStatus.OK);
         }
     }
 
-    @KafkaListener(topics = "order200")
-    public void listen200(String message) throws JsonProcessingException, InterruptedException {
-        Thread.sleep(500);
-        log.info("Получено сообщение из топика 'order200' {}.", message);
-        UUID orderUUID = UUID.fromString(message);
-        Order order = repository.findById(orderUUID).orElseThrow();
-        order.setSuccess(order.getSuccess() + 1);
-        repository.save(order);
-        if (order.getSuccess() == 3) {
-            order.setStatus("Заказ одобрен.");
+    @KafkaListener(topics = "processOrder")
+    public void listen200(String message) throws JsonProcessingException {
+        log.info("Получено сообщение из топика 'processOrder' {}.", message);
+        ProcessOrderDto dto = objectMapper.readValue(message, ProcessOrderDto.class);
+        Order order = repository.findById(dto.getOrderUUID()).orElseThrow();
+        if (!dto.isAllowReservation()) {
+            String errorMessage = getErrorMessage(dto);
+            order.setStatus(errorMessage);
             repository.save(order);
-            kafkaTemplate.send("executeOrder", objectMapper.writeValueAsString(order));
+            dto.setNew(false);
+            dto.setReservedByAllServices(false);
+            dto.setMessage(errorMessage);
+            map.remove(dto.getOrderUUID());
+            kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(dto));
+            log.info("Отправлена команда на отмену резервирования для заказа {}.", message);
+        } else {
+            int count = map.get(dto.getOrderUUID());
+            count = count + 1;
+            if (count == 3) {
+                order.setStatus("Заказ одобрен.");
+                repository.save(order);
+                dto.setNew(false);
+                dto.setReservedByAllServices(true);
+                dto.setMessage(String.format("Ожидается доставка %s заказа %s.", dto.getOrderUUID(), dto.getDeliveryDate()));
+                kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(dto));
+                log.info("Отправлена команда на выполнение заказа {}.", dto.getOrderUUID());
+                map.remove(dto.getOrderUUID());
+            } else {
+                map.put(dto.getOrderUUID(), count);
+            }
         }
-    }
-
-    @KafkaListener(topics = "order500")
-    public void listen500(String message) throws JsonProcessingException, InterruptedException {
-        Thread.sleep(200);
-        log.info("Получено сообщение из топика 'order500' {}.", message);
-        UUID orderUUID = UUID.fromString(message);
-        Order order = repository.findById(orderUUID).orElseThrow();
-        order.setStatus("Невозможно выполнить заказ.");
-        repository.save(order);
-        kafkaTemplate.send("cancel", objectMapper.writeValueAsString(order));
-        log.info("Отправлена команда на отмену резервирования для заказа {}.", message);
     }
 }

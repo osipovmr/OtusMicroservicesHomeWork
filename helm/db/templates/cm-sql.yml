@@ -42,7 +42,6 @@ data:
         cost          int  not null,
         user_uuid     uuid not null,
         user_email    varchar(255) null,
-        success       int null,
         status        varchar(255),
         delivery_date timestamp null
     );

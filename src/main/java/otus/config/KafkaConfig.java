@@ -62,16 +62,6 @@ public class KafkaConfig {
     }
 
     @Bean
-    public NewTopic topic2() {
-        return TopicBuilder.name("executeOrder").build();
-    }
-
-    @Bean
-    public NewTopic topic3() {
-        return TopicBuilder.name("cancel").build();
-    }
-
-    @Bean
     KafkaAdmin admin() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, producerYamlProperties.getPropertiesMap().get("bootstrap.servers"));

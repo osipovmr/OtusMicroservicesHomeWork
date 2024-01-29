@@ -1,35 +1,27 @@
-package otus.model.entity;
+package otus.model.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "orders")
-public class Order {
+public class ProcessOrderDto {
 
-    @Id
-    @Column(name = "order_uuid")
     private UUID orderUUID;
-    @Column(name = "product_uuid")
     private UUID productUUID;
     private int quantity;
     private int cost;
-    @Column(name = "user_uuid")
     private UUID userUUID;
     private String userEmail;
-    private String status;
+    private boolean isNew;
+    private boolean isReservedByAllServices;
+    private boolean allowReservation;
+    private String serviceName;
     private LocalDate deliveryDate;
+    private String message;
 
     @Override
     public String toString() {
