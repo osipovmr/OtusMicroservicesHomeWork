@@ -16,9 +16,9 @@ data:
     );
     create table user_profile
     (
-        user_uuid  uuid not null,
+        user_uuid  uuid    not null,
         avatar_uri varchar null,
-        age        int2 null
+        age        int2    null
     );
     create table storage
     (
@@ -37,13 +37,13 @@ data:
     create table orders
     (
         order_uuid    uuid primary key,
-        product_uuid  uuid not null,
-        quantity      int  not null,
-        cost          int  not null,
-        user_uuid     uuid not null,
+        product_uuid  uuid         not null,
+        quantity      int          not null,
+        cost          int          not null,
+        user_uuid     uuid         not null,
         user_email    varchar(255) null,
         status        varchar(255),
-        delivery_date timestamp null
+        delivery_date timestamp    null
     );
     insert into storage (product_uuid, available_quantity, reserved_quantity)
     values ('22a214f1-8d88-4997-821e-a0781d003e16', 200, 0);
@@ -54,6 +54,15 @@ data:
     create table payment
     (
         user_uuid       uuid not null,
-        available_money int null,
-        reserved_money  int null
+        available_money int  null,
+        reserved_money  int  null
+    );
+    create table notification
+    (
+        notification_uuid uuid         not null,
+        email             varchar(255) not null,
+        message           varchar(255) not null,
+        order_uuid        uuid         not null,
+        user_uuid         uuid         not null,
+        is_notificated    boolean
     );

@@ -110,7 +110,7 @@ public class OrderController {
                     repository.save(order);
                     dto.setNew(false);
                     dto.setReservedByAllServices(true);
-                    dto.setMessage(String.format("Ожидается доставка %s заказа %s.", dto.getOrderUUID(), dto.getDeliveryDate()));
+                    dto.setMessage("Курьер в пути");
                     kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(dto));
                     log.info("Отправлена команда на выполнение заказа {}.", dto.getOrderUUID());
                     map.remove(dto.getOrderUUID());
