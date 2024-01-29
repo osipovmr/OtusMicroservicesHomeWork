@@ -87,7 +87,7 @@ public class OrderController {
     }
 
     @KafkaListener(topics = "processOrder")
-    public void listen200(String message) throws JsonProcessingException {
+    public void listen(String message) throws JsonProcessingException {
         log.info("Получено сообщение из топика 'processOrder' {}.", message);
         ProcessOrderDto dto = objectMapper.readValue(message, ProcessOrderDto.class);
         Order order = repository.findById(dto.getOrderUUID()).orElseThrow();
@@ -102,19 +102,21 @@ public class OrderController {
             kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(dto));
             log.info("Отправлена команда на отмену резервирования для заказа {}.", message);
         } else {
-            int count = map.get(dto.getOrderUUID());
-            count = count + 1;
-            if (count == 3) {
-                order.setStatus("Заказ одобрен.");
-                repository.save(order);
-                dto.setNew(false);
-                dto.setReservedByAllServices(true);
-                dto.setMessage(String.format("Ожидается доставка %s заказа %s.", dto.getOrderUUID(), dto.getDeliveryDate()));
-                kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(dto));
-                log.info("Отправлена команда на выполнение заказа {}.", dto.getOrderUUID());
-                map.remove(dto.getOrderUUID());
-            } else {
-                map.put(dto.getOrderUUID(), count);
+            int count = map.getOrDefault(dto.getOrderUUID(), 99);
+            if (count != 99) {
+                count = count + 1;
+                if (count == 3) {
+                    order.setStatus("Заказ одобрен.");
+                    repository.save(order);
+                    dto.setNew(false);
+                    dto.setReservedByAllServices(true);
+                    dto.setMessage(String.format("Ожидается доставка %s заказа %s.", dto.getOrderUUID(), dto.getDeliveryDate()));
+                    kafkaTemplate.send("newOrder", objectMapper.writeValueAsString(dto));
+                    log.info("Отправлена команда на выполнение заказа {}.", dto.getOrderUUID());
+                    map.remove(dto.getOrderUUID());
+                } else {
+                    map.put(dto.getOrderUUID(), count);
+                }
             }
         }
     }
