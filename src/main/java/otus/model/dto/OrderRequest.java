@@ -1,5 +1,6 @@
 package otus.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -11,8 +12,10 @@ import java.util.UUID;
 @Data
 public class OrderRequest {
 
+    @JsonProperty("productUUID")
     private UUID productUUID;
+    private String productName;
     private int quantity;
-    private int price;
+    private double price;
     private LocalDate deliveryDate;
 }

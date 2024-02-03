@@ -13,7 +13,7 @@ public class ProcessOrderDto {
     private UUID orderUUID;
     private UUID productUUID;
     private int quantity;
-    private int cost;
+    private double cost;
     private UUID userUUID;
     private String userEmail;
     private boolean isNew;

@@ -24,7 +24,7 @@ public class Order {
     @Column(name = "product_uuid")
     private UUID productUUID;
     private int quantity;
-    private int cost;
+    private double cost;
     @Column(name = "user_uuid")
     private UUID userUUID;
     private String userEmail;

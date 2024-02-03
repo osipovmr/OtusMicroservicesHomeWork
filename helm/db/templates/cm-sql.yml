@@ -22,7 +22,9 @@ data:
     );
     create table storage
     (
-        product_uuid       uuid not null,
+        product_uuid       uuid             not null,
+        name               varchar(255)     not null,
+        price              double precision not null,
         available_quantity int,
         reserved_quantity  int
     );
@@ -37,25 +39,23 @@ data:
     create table orders
     (
         order_uuid    uuid primary key,
-        product_uuid  uuid         not null,
-        quantity      int          not null,
-        cost          int          not null,
-        user_uuid     uuid         not null,
-        user_email    varchar(255) null,
+        product_uuid  uuid             not null,
+        quantity      int              not null,
+        cost          double precision not null,
+        user_uuid     uuid             not null,
+        user_email    varchar(255)     null,
         status        varchar(255),
-        delivery_date timestamp    null
+        delivery_date timestamp        null
     );
-    insert into storage (product_uuid, available_quantity, reserved_quantity)
-    values ('22a214f1-8d88-4997-821e-a0781d003e16', 200, 0);
     insert into delivery (courier_uuid, is_available, in_delivering)
     values ('23a214f1-8d88-4997-821e-a0781d003e16', true, false);
     insert into delivery (courier_uuid, is_available, in_delivering)
     values ('99a214f1-8d88-4997-821e-a0781d003e16', true, false);
     create table payment
     (
-        user_uuid       uuid not null,
-        available_money int  null,
-        reserved_money  int  null
+        user_uuid       uuid             not null,
+        available_money double precision null,
+        reserved_money  double precision null
     );
     create table notification
     (
