@@ -22,11 +22,15 @@ service:
 ingress:
   enabled: true
   className: "nginx"
-  annotations: { }
-  # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
+  annotations: {
+    nginx.ingress.kubernetes.io/auth-url: "http://v2-auth.project.svc.cluster.local:8000/auth",
+    nginx.ingress.kubernetes.io/auth-signin: "http://$host/signin",
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-User,X-Email,X-UserId,X-First-Name,X-Last-Name"
+  }
   hosts:
     - host: arch.homework
       paths:
         - path: /storage/upload
+          pathType: Prefix
+        - path: /storage/product
           pathType: Prefix
