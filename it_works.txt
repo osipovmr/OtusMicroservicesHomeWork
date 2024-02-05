@@ -15,7 +15,7 @@ helm install v6 payment -n project
 helm install v7 notification -n project
 
 cd ..
-newman run "order_test.json"
+newman run "PROJECT.json"
 
 helm delete v1 -n project
 helm delete v2 -n project
