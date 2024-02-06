@@ -38,15 +38,96 @@
 			"response": []
 		},
 		{
-			"name": "Загрузка товаров",
+			"name": "Регистрация admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"login\": \"admin\", \n\t\"password\": \"password\",\n\t\"email\": \"osipovmr@yandex.ru\",\n\t\"first_name\": \"ILYA\",\n\t\"last_name\": \"OSIPOV\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/register",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Логин admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"admin\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Доступные товары null",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.collectionVariables.set(\"productName\", pm.variables.replaceIn('{{$randomProduct}}'))",
-							"pm.collectionVariables.set(\"price\", pm.variables.replaceIn('{{$randomPrice}}'))",
-							"pm.collectionVariables.set(\"productQuantity\", pm.variables.replaceIn(_.random(10, 1000)))",
+							"",
 							""
 						],
 						"type": "text/javascript"
@@ -58,8 +139,62 @@
 						"exec": [
 							"pm.test(\"test token data\", function () {",
 							"    pm.response.to.have.status(200);",
-							"     const productUUID = pm.response.json()[0].productUUID;",
-							"     pm.collectionVariables.set(\"productUUID\", productUUID);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/storage/product",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"storage",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Загрузка товаров",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.variables.set(\"productName\", pm.variables.replaceIn('{{$randomProduct}}'))",
+							"pm.variables.set(\"price\", pm.variables.replaceIn('{{$randomPrice}}'))",
+							"pm.variables.set(\"productQuantity\", pm.variables.replaceIn(_.random(10, 1000)))",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});",
 							""
 						],
@@ -87,6 +222,64 @@
 					"path": [
 						"storage",
 						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка загруженных товаров",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.collectionVariables.set(\"productUUID\", pm.response.json()[0].productUUID);",
+							"    pm.collectionVariables.set(\"productName\", pm.response.json()[0].name);",
+							"    pm.collectionVariables.set(\"price\", pm.response.json()[0].price);",
+							"    pm.collectionVariables.set(\"productQuantity\", pm.response.json()[0].availableQuantity);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/storage/product",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"storage",
+						"product"
 					]
 				}
 			},
@@ -177,6 +370,70 @@
 			"response": []
 		},
 		{
+			"name": "Количество доступных курьеров = 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.availableCouriers).to.eql(2);",
+							"    pm.expect(jsonData.notAvailable).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/delivery/available",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"delivery",
+						"available"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Выход admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/logout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Проверка данных 401",
 			"event": [
 				{
@@ -255,6 +512,63 @@
 					],
 					"path": [
 						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Попытка выполнить заказ без авторизации",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"x-orderid\", pm.variables.replaceIn('{{$guid}}'))",
+							"const availableQuantityForOrder = parseInt(1000 / pm.collectionVariables.get(\"price\"));",
+							"pm.collectionVariables.set(\"availableQuantityForOrder\", availableQuantityForOrder);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test response\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-orderid",
+						"value": "{{x-orderid}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productUUID\": \"{{productUUID}}\",\n    \"productName\": \"{{productName}}\",\n    \"quantity\": \"{{availableQuantityForOrder}}\",\n    \"price\": \"{{price}}\",\n    \"deliveryDate\": \"2024-10-10\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/order/add",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"order",
+						"add"
 					]
 				}
 			},
@@ -448,40 +762,6 @@
 					"path": [
 						"payment",
 						"deposit"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Количество доступных курьеров = 2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"test token data\", function () {",
-							"    pm.response.to.have.status(200);",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.availableCouriers).to.eql(2);",
-							"    pm.expect(jsonData.notAvailable).to.eql(0);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/delivery/available",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"delivery",
-						"available"
 					]
 				}
 			},
