@@ -30,4 +30,6 @@ ingress:
       paths:
         - path: /notification/notificationList
           pathType: Prefix
+        - path: /notification
+          pathType: Prefix
 
