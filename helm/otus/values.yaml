@@ -42,6 +42,4 @@ ingress:
           pathType: Prefix
         - path: /order/add
           pathType: Prefix
-        - path: /order/status
-          pathType: Prefix
 

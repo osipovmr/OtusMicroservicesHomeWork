@@ -41,12 +41,6 @@ public class OrderController {
         };
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<String> checkOrderStatus(@RequestParam UUID orderUUID) {
-        Order order = repository.findById(orderUUID).orElseThrow();
-        return new ResponseEntity<>(order.getStatus(), HttpStatus.OK);
-    }
-
     @PostMapping("/add")
     public ResponseEntity<?> addOrder(@RequestHeader Map<String, String> headers, @RequestBody OrderRequest request) throws JsonProcessingException {
         if (!headers.containsKey("x-userid")) {
