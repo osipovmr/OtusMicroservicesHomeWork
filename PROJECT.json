@@ -246,10 +246,6 @@
 						"exec": [
 							"pm.test(\"test token data\", function () {",
 							"    pm.response.to.have.status(200);",
-							"    pm.collectionVariables.set(\"productUUID\", pm.response.json()[0].productUUID);",
-							"    pm.collectionVariables.set(\"productName\", pm.response.json()[0].name);",
-							"    pm.collectionVariables.set(\"price\", pm.response.json()[0].price);",
-							"    pm.collectionVariables.set(\"productQuantity\", pm.response.json()[0].availableQuantity);",
 							"});",
 							""
 						],
@@ -768,6 +764,64 @@
 			"response": []
 		},
 		{
+			"name": "Получить список доступных товаров",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.collectionVariables.set(\"productUUID\", pm.response.json()[0].productUUID);",
+							"    pm.collectionVariables.set(\"productName\", pm.response.json()[0].name);",
+							"    pm.collectionVariables.set(\"price\", pm.response.json()[0].price);",
+							"    pm.collectionVariables.set(\"productQuantity\", pm.response.json()[0].availableQuantity);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/storage/product",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"storage",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Добавить заказ на 1000 рублей",
 			"event": [
 				{
@@ -879,7 +933,8 @@
 						"exec": [
 							"pm.test(\"test token data\", function () {",
 							"    pm.response.to.have.status(200);",
-							"    pm.expect(pm.response.text()).to.eql(\"Заказ одобрен.\")",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Курьер в пути\");",
 							"});"
 						],
 						"type": "text/javascript"
@@ -899,19 +954,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/order/status?orderUUID={{x-orderid}}",
+					"raw": "{{baseUrl}}/notification/{{x-orderid}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"order",
-						"status"
-					],
-					"query": [
-						{
-							"key": "orderUUID",
-							"value": "{{x-orderid}}"
-						}
+						"notification",
+						"{{x-orderid}}"
 					]
 				}
 			},
@@ -992,7 +1041,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.collectionVariables.set(\"x-orderid\", pm.variables.replaceIn('{{$guid}}'))"
+							"pm.collectionVariables.set(\"x-orderid2\", pm.variables.replaceIn('{{$guid}}'))"
 						],
 						"type": "text/javascript"
 					}
@@ -1014,7 +1063,7 @@
 				"header": [
 					{
 						"key": "x-orderid",
-						"value": "{{x-orderid}}",
+						"value": "{{x-orderid2}}",
 						"type": "text"
 					}
 				],
@@ -1049,7 +1098,8 @@
 						"exec": [
 							"pm.test(\"test token data\", function () {",
 							"    pm.response.to.have.status(200);",
-							"    pm.expect(pm.response.text()).to.eql(\"Невозможно выполнить заказ, так как недостаточно средств для оплаты.\")",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Невозможно выполнить заказ, так как недостаточно средств для оплаты.\");",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1069,19 +1119,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/order/status?orderUUID={{x-orderid}}",
+					"raw": "{{baseUrl}}/notification/{{x-orderid2}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"order",
-						"status"
-					],
-					"query": [
-						{
-							"key": "orderUUID",
-							"value": "{{x-orderid}}"
-						}
+						"notification",
+						"{{x-orderid2}}"
 					]
 				}
 			},
@@ -1346,6 +1390,10 @@
 		},
 		{
 			"key": "availableQuantityForOrder",
+			"value": ""
+		},
+		{
+			"key": "x-orderid2",
 			"value": ""
 		}
 	]

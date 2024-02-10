@@ -17,6 +17,8 @@ helm install nginx ingress-nginx/ingress-nginx --namespace nginx -f nginx-ingres
 
 kubectl delete -A ValidatingWebhookConfiguration nginx-ingress-nginx-admission
 
-helm install kafka -n project oci://registry-1.docker.io/bitnamicharts/kafka
+helm install kafka -n project oci://registry-1.docker.io/bitnamicharts/kafka --set listeners.client.protocol=PLAINTEXT,controller.replicaCount=1
 
 УСТАНОВИТЬ АДРЕС МИНИКУБА В HOSTS
+
+helm delete kafka -n project
