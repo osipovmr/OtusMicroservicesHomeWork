@@ -10,10 +10,12 @@ http_server_requests_seconds_bucket{uri=~"/user/.*"}
 sum by(le)(http_server_requests_seconds_bucket{uri=~"/user/.*"})
 sum by(le) (rate(http_server_requests_seconds_bucket{uri=~"/user/.*"}[1m]))
 
-histogram_quantile(0.95, sum by(le) (rate(http_server_requests_seconds_bucket{uri=~"/user/.*"}[1m])))
+histogram_quantile(0.95, sum by(le) (rate(http_server_requests_seconds_bucket{uri=~"/user/.*"}[1m]))) - время выполнения 95% самых быстрых запросов
 histogram_quantile(0.95, sum by(le, uri) (rate(http_server_requests_seconds_bucket{uri=~"/user/.*"}[1m])))
 
 
-http_server_requests_seconds_count - количество запросов
+http_server_requests_seconds_count - общее количество запросов, которые получены сервером
+rate(http_server_requests_seconds_count[2m]) - средняя скорость увеличения количества запросов  в секунду за последние 2 минуты
+sum by (uri) (rate(http_server_requests_seconds_sum{uri=~"/user/.*"}[1m])) / sum by (uri) (rate(http_server_requests_seconds_count{uri=~"/user/.*"}[1m])) - среднее время выполнения запроса
 http_server_requests_seconds_bucket - количество запросов, выполненных быстрее чем le секунд
 le обозначают меньше или равно
