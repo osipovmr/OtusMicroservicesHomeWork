@@ -1,9 +1,9 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "otus.fullname" . }}
+  name: {{ include "storage.fullname" . }}
   labels:
-    {{- include "otus.labels" . | nindent 4 }}
+    {{- include "storage.labels" . | nindent 4 }}
 spec:
   endpoints:
     - port: {{ .Values.service.name }}
@@ -16,4 +16,4 @@ spec:
       - project
   selector:
     matchLabels:
-      {{- include "otus.selectorLabels" . | nindent 4 }}
+      {{- include "storage.selectorLabels" . | nindent 4 }}

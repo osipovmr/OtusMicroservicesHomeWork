@@ -1,6 +1,7 @@
-kubectl port-forward service/prometheus-operated  9090
-kubectl port-forward service/stack-grafana  9000:80
-
+kubectl port-forward service/prometheus-operated -n monitoring  9090
+kubectl port-forward service/stack-grafana -n monitoring 9000:80
+127.0.0.1:9090 prometheus
+127.0.0.1:9000 grafana
 admin / prom-operator
 
 helm upgrade --install ingress-nginx ingress-nginx \
