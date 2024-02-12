@@ -1090,7 +1090,7 @@
 			"response": []
 		},
 		{
-			"name": "Статус заказа \"Невозможно выполнить заказ\"",
+			"name": "Статус заказа \"Невозможно выполнить заказ (не достаточно средств для оплаты)\".",
 			"event": [
 				{
 					"listen": "test",
@@ -1203,6 +1203,378 @@
 					"path": [
 						"delivery",
 						"available"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Положить деньги на счет 1 000 000 рублей",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.availableMoney).to.gt(1000000);",
+							"    pm.expect(jsonData.reservedMoney).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"value\": 1000000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/payment/deposit",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payment",
+						"deposit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить третий заказ на 1 000 000 рублей",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"x-orderid3\", pm.variables.replaceIn('{{$guid}}'));",
+							"const availableQuantityForOrder = parseInt(1000000 / pm.collectionVariables.get(\"price\"));",
+							"pm.collectionVariables.set(\"availableQuantityForOrder\", availableQuantityForOrder);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test response\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-orderid",
+						"value": "{{x-orderid3}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productUUID\": \"{{productUUID}}\",\n    \"productName\": \"{{productName}}\",\n    \"quantity\": \"{{availableQuantityForOrder}}\",\n    \"price\": \"{{price}}\",\n    \"deliveryDate\": \"2024-10-10\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/order/add",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"order",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Статус заказа \"Невозможно выполнить заказ (не достаточно товара на складе)\".",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Невозможно выполнить заказ, так как отсутствуют необходимое количество товара на складе.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"setTimeout(() => {}, 200);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/notification/{{x-orderid3}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"notification",
+						"{{x-orderid3}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить четвертый заказ на 1 ед. товара",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"x-orderid4\", pm.variables.replaceIn('{{$guid}}'));",
+							"const availableQuantityForOrder = parseInt(1000000 / pm.collectionVariables.get(\"price\"));",
+							"pm.collectionVariables.set(\"availableQuantityForOrder\", availableQuantityForOrder);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test response\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-orderid",
+						"value": "{{x-orderid4}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productUUID\": \"{{productUUID}}\",\n    \"productName\": \"{{productName}}\",\n    \"quantity\": 1,\n    \"price\": \"{{price}}\",\n    \"deliveryDate\": \"2024-10-10\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/order/add",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"order",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Статус заказа \"Заказ одобрен\"",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Курьер в пути\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"setTimeout(() => {}, 300);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/notification/{{x-orderid4}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"notification",
+						"{{x-orderid4}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Количество доступных курьеров = 0",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.availableCouriers).to.eql(0);",
+							"    pm.expect(jsonData.notAvailable).to.eql(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/delivery/available",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"delivery",
+						"available"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавить пятый заказ на 1 ед. товара",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"x-orderid5\", pm.variables.replaceIn('{{$guid}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test response\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-orderid",
+						"value": "{{x-orderid5}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productUUID\": \"{{productUUID}}\",\n    \"productName\": \"{{productName}}\",\n    \"quantity\": 1,\n    \"price\": \"{{price}}\",\n    \"deliveryDate\": \"2024-10-10\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/order/add",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"order",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Статус заказа \"Невозможно выполнить заказ (не достаточно средств для оплаты)\". Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"test token data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Невозможно выполнить заказ, так как отсутствуют свободные курьеры для доставки.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"setTimeout(() => {}, 200);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/notification/{{x-orderid5}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"notification",
+						"{{x-orderid5}}"
 					]
 				}
 			},
@@ -1394,6 +1766,18 @@
 		},
 		{
 			"key": "x-orderid2",
+			"value": ""
+		},
+		{
+			"key": "x-orderid3",
+			"value": ""
+		},
+		{
+			"key": "x-orderid4",
+			"value": ""
+		},
+		{
+			"key": "x-orderid5",
 			"value": ""
 		}
 	]
