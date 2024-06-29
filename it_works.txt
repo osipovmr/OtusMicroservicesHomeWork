@@ -1,5 +1,3 @@
-minikube start --driver=hyperkit
-
 minikube start --driver=hyperkit --memory=max --cpus=max
 
 kubectl create namespace monitoring
