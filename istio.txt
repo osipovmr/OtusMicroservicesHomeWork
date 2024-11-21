@@ -1,0 +1,3 @@
+kubectl label namespace project istio-injection=enabled
+
+kubectl get pods -n project

@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: v6-payment
+  namespace: project
+spec:
+  hosts:
+    - v6-payment
+  http:
+    - match:
+        - uri:
+            prefix: /payment/checkAccount
+      fault:
+        abort:
+          httpStatus: 400
+          percentage:
+            value: 100.0
+      route:
+        - destination:
+            host: v6-payment
+            port:
+              number: 8000

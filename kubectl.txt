@@ -1,5 +1,9 @@
 kubectl create namespace osipov
 kubectl config set-context --current --namespace=osipov
+kubectl apply -f имя файла
+kubectl get pods -n <namespace> - просмотр созданных подов
+kubectl get services -n <namespace> - просмотр созданных сервисов
+kubectl get deployments -n <namespace> - просмотр созданных Deployment
 
 kubectl config set-context --current --namespace=database
 kubectl exec -it database-db-0 -n database -- bash
